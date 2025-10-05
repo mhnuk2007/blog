@@ -1,6 +1,6 @@
 package com.learning.blog.controller;
 
-import com.learning.blog.entity.Post;
+import com.learning.blog.dto.PostResponse;
 import com.learning.blog.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,36 +17,39 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestParam String title,
-                                           @RequestParam String content,
-                                           Authentication authentication) {
-        Post createdPost = postService.createPost(title, content, authentication.getName());
-        return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
+    public ResponseEntity<PostResponse> createPost(
+            @RequestParam String title,
+            @RequestParam String content,
+            Authentication authentication) {
+        PostResponse response = postService.createPost(title, content, authentication.getName());
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts() {
+    public ResponseEntity<List<PostResponse>> getAllPosts() {
         return new ResponseEntity<>(postService.getAllPosts(), HttpStatus.OK);
     }
 
     @GetMapping("/user/{username}")
-    public ResponseEntity<List<Post>> getPostsByUser(@PathVariable String username) {
+    public ResponseEntity<List<PostResponse>> getPostsByUser(@PathVariable String username) {
         return new ResponseEntity<>(postService.getPostsByUser(username), HttpStatus.OK);
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long postId,
-                                           @RequestParam String title,
-                                           @RequestParam String content,
-                                           Authentication authentication) {
-        Post updatedPost = postService.updatePost(postId, authentication.getName(), title, content);
-        return new ResponseEntity<>(updatedPost, HttpStatus.OK);
+    public ResponseEntity<PostResponse> updatePost(
+            @PathVariable Long postId,
+            @RequestParam String title,
+            @RequestParam String content,
+            Authentication authentication) {
+        PostResponse response = postService.updatePost(postId, authentication.getName(), title, content);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<String> deletePost(@PathVariable Long postId,
-                                             Authentication authentication) {
+    public ResponseEntity<Void> deletePost(
+            @PathVariable Long postId,
+            Authentication authentication) {
         postService.deletePost(postId, authentication.getName());
-        return new ResponseEntity<>("Post deleted successfully", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
