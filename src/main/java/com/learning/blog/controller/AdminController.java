@@ -7,8 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
+
     @GetMapping("/dashboard")
     public String adminDashboard() {
-        return "Welcome Admin!";
+        return "Welcome Admin! You have full access to manage users and posts.";
+    }
+
+    @GetMapping("/status")
+    public String status() {
+        return "System is running smoothly ✅";
     }
 }
